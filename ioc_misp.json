@@ -1,0 +1,354 @@
+{
+  "Event": {
+    "info": "WeChat Impersonation Cross-Platform Stealer - HOSTS Hijack Campaign",
+    "threat_level_id": "2",
+    "analysis": "2",
+    "distribution": "3",
+    "sharing_group_id": "0",
+    "org_id": "1",
+    "orgc_id": "1",
+    "date": "2026-06-26",
+    "Attribute": [
+      {
+        "type": "domain",
+        "category": "Network activity",
+        "to_ids": true,
+        "value": "xn--wechat-u88im840c.com",
+        "comment": "Punycode domain impersonating WeChat (wechat\u4f1a\u9762.com). Used in targeted phishing campaign delivered via Telegram DM. Registrar: Tucows. Creation date: 2025-12-01.",
+        "disable_correlation": false,
+        "Tag": [
+          {"name": "tlp:white"},
+          {"name": "phishing"},
+          {"name": "punycode"},
+          {"name": "wechat"}
+        ]
+      },
+      {
+        "type": "domain",
+        "category": "Network activity",
+        "to_ids": true,
+        "value": "wechat.appstore.ms",
+        "comment": "Payload delivery host for platform-specific malware. Serves curl|zsh script for macOS and WeChat_Setup.exe for Windows.",
+        "disable_correlation": false,
+        "Tag": [
+          {"name": "tlp:white"},
+          {"name": "payload-delivery"},
+          {"name": "c2"}
+        ]
+      },
+      {
+        "type": "domain",
+        "category": "Network activity",
+        "to_ids": true,
+        "value": "charlestonwaterheater.com",
+        "comment": "Cloudflare-fronted C2 server. Registrar: Unstoppable Domains. Creation date: 2025-11-28. NS: nia.ns.cloudflare.com, quincy.ns.cloudflare.com.",
+        "disable_correlation": false,
+        "Tag": [
+          {"name": "tlp:white"},
+          {"name": "c2"},
+          {"name": "cloudflare"},
+          {"name": "unstoppable-domains"}
+        ]
+      },
+      {
+        "type": "url",
+        "category": "Network activity",
+        "to_ids": true,
+        "value": "https://xn--wechat-u88im840c.com/calls/663553598529",
+        "comment": "Initial phishing lure URL. Delivered via Telegram DM posing as fake Bankless recruiter. Targeted individual in crypto/DeFi community.",
+        "disable_correlation": false,
+        "Tag": [
+          {"name": "tlp:white"},
+          {"name": "phishing"},
+          {"name": "telegram"},
+          {"name": "social-engineering"}
+        ]
+      },
+      {
+        "type": "url",
+        "category": "Network activity",
+        "to_ids": true,
+        "value": "https://wechat.appstore.ms/macos/installation",
+        "comment": "macOS stage 1.5 payload URL. Delivered via curl|zsh. Loads C2-served AppleScript stealer.",
+        "disable_correlation": false,
+        "Tag": [
+          {"name": "tlp:white"},
+          {"name": "macos"},
+          {"name": "payload"},
+          {"name": "curl-pipe"}
+        ]
+      },
+      {
+        "type": "filename",
+        "category": "Payload delivery",
+        "to_ids": true,
+        "value": "WeChat_Setup.exe",
+        "comment": "Fake WeChat installer (101MB). NSIS+Electron dropper. 0/70 on VirusTotal at time of analysis. Displays fake Firefox update decoy while dropping Hijack.Host.",
+        "disable_correlation": false,
+        "Tag": [
+          {"name": "tlp:white"},
+          {"name": "dropper"},
+          {"name": "nsis"},
+          {"name": "electron"},
+          {"name": "windows"}
+        ]
+      },
+      {
+        "type": "filename",
+        "category": "Payload delivery",
+        "to_ids": true,
+        "value": "Hijack.exe",
+        "comment": "Fake WeChat installer executable. Drops Hijack.Host malware. Reported filename from victim machine.",
+        "disable_correlation": false,
+        "Tag": [
+          {"name": "tlp:white"},
+          {"name": "malware"},
+          {"name": "hijack-host"},
+          {"name": "windows"}
+        ]
+      },
+      {
+        "type": "sha256",
+        "category": "Payload delivery",
+        "to_ids": true,
+        "value": "1717BB599E119E54F944755656334AECA9CDCCB23A03113860A4627EF29904D3",
+        "comment": "SHA256 of attacker-controlled HOSTS file dropped by Hijack.Host (1728 bytes). Detected and quarantined by Malwarebytes. Replaces legitimate HOSTS with attacker redirects.",
+        "disable_correlation": false,
+        "Tag": [
+          {"name": "tlp:white"},
+          {"name": "hijack-host"},
+          {"name": "hosts-hijack"},
+          {"name": "malwarebytes-detected"}
+        ]
+      },
+      {
+        "type": "mutex",
+        "category": "Artifacts dropped",
+        "to_ids": false,
+        "value": "wechat-launcher",
+        "comment": "Electron app package name extracted from fake WeChat installer ASAR archive. Part of social engineering decoy.",
+        "disable_correlation": true,
+        "Tag": [
+          {"name": "tlp:white"},
+          {"name": "decoy"},
+          {"name": "electron"}
+        ]
+      },
+      {
+        "type": "text",
+        "category": "Artifacts dropped",
+        "to_ids": false,
+        "value": "e505bde9e3545ce2361f7cc1f948dcb1124de03384544fea46e99a982a106e6f",
+        "comment": "Victim/session token observed in C2 communications (charlestonwaterheater.com/dynamic?txd=\u003ctoken\u003e). Likely unique per infection.",
+        "disable_correlation": true,
+        "Tag": [
+          {"name": "tlp:white"},
+          {"name": "token"},
+          {"name": "c2"}
+        ]
+      },
+      {
+        "type": "text",
+        "category": "Artifacts dropped",
+        "to_ids": false,
+        "value": "5190ef1733183a0dc63fb623357f56d6",
+        "comment": "API key used for C2 authentication. Likely unique per campaign or operator.",
+        "disable_correlation": true,
+        "Tag": [
+          {"name": "tlp:white"},
+          {"name": "api-key"},
+          {"name": "c2"}
+        ]
+      },
+      {
+        "type": "text",
+        "category": "Attribution",
+        "to_ids": false,
+        "value": "Oscar Hansen | Bankless",
+        "comment": "Fake recruiter identity used in Telegram DM social engineering lure. Not a real person associated with Bankless DAO.",
+        "disable_correlation": true,
+        "Tag": [
+          {"name": "tlp:white"},
+          {"name": "social-engineering"},
+          {"name": "fake-identity"}
+        ]
+      },
+      {
+        "type": "text",
+        "category": "Network activity",
+        "to_ids": false,
+        "value": "Mozilla Firefox is updating",
+        "comment": "Decoy process window title displayed by Windows payload. Fake update progress bar to justify background activity and delay victim suspicion.",
+        "disable_correlation": true,
+        "Tag": [
+          {"name": "tlp:white"},
+          {"name": "decoy"},
+          {"name": "social-engineering"},
+          {"name": "firefox"}
+        ]
+      },
+      {
+        "type": "text",
+        "category": "Network activity",
+        "to_ids": false,
+        "value": "127.0.0.1 www.virustotal.com",
+        "comment": "Confirmed anti-analysis HOSTS entry. Redirects VirusTotal to localhost to prevent victims from scanning suspicious files. Part of larger HOSTS hijack.",
+        "disable_correlation": false,
+        "Tag": [
+          {"name": "tlp:white"},
+          {"name": "anti-analysis"},
+          {"name": "hosts-hijack"},
+          {"name": "virustotal"}
+        ]
+      },
+      {
+        "type": "text",
+        "category": "Network activity",
+        "to_ids": false,
+        "value": "127.0.0.1 *.malwarebytes.com",
+        "comment": "Confirmed HOSTS redirect blocking Malwarebytes update servers. Causes AV crash via DNS timeout rather than process termination - stealthier evasion.",
+        "disable_correlation": false,
+        "Tag": [
+          {"name": "tlp:white"},
+          {"name": "av-evasion"},
+          {"name": "hosts-hijack"},
+          {"name": "malwarebytes"}
+        ]
+      },
+      {
+        "type": "text",
+        "category": "Network activity",
+        "to_ids": false,
+        "value": "127.0.0.1 *.microsoft.com",
+        "comment": "Confirmed HOSTS redirect blocking Microsoft update and security domains. Prevents OS patching and security tool updates.",
+        "disable_correlation": false,
+        "Tag": [
+          {"name": "tlp:white"},
+          {"name": "av-evasion"},
+          {"name": "hosts-hijack"},
+          {"name": "microsoft"}
+        ]
+      },
+      {
+        "type": "text",
+        "category": "Network activity",
+        "to_ids": false,
+        "value": "127.0.0.1 *.windowsupdate.com",
+        "comment": "Confirmed HOSTS redirect blocking Windows Update. Prevents OS patches and security updates from being applied.",
+        "disable_correlation": false,
+        "Tag": [
+          {"name": "tlp:white"},
+          {"name": "av-evasion"},
+          {"name": "hosts-hijack"},
+          {"name": "windows-update"}
+        ]
+      },
+      {
+        "type": "filename",
+        "category": "Persistence mechanism",
+        "to_ids": false,
+        "value": "42171a62-70cb-11f1-92c7-244bfe5a391c.data",
+        "comment": "Malwarebytes encrypted quarantine file containing attacker-controlled HOSTS file. MB 5.5.7 uses machine-specific encryption key - content not recoverable.",
+        "disable_correlation": true,
+        "Tag": [
+          {"name": "tlp:white"},
+          {"name": "quarantine"},
+          {"name": "malwarebytes"}
+        ]
+      },
+      {
+        "type": "filename",
+        "category": "Persistence mechanism",
+        "to_ids": false,
+        "value": "42171a62-70cb-11f1-92c7-244bfe5a391c.quar",
+        "comment": "Malwarebytes quarantine metadata file. Companion to .data quarantine file.",
+        "disable_correlation": true,
+        "Tag": [
+          {"name": "tlp:white"},
+          {"name": "quarantine"},
+          {"name": "malwarebytes"}
+        ]
+      },
+      {
+        "type": "filename",
+        "category": "Payload installation",
+        "to_ids": false,
+        "value": "C:\\WINDOWS\\SYSTEM32\\DRIVERS\\ETC\\HOSTS",
+        "comment": "System HOSTS file modified by Hijack.Host. Default Windows HOSTS is ~800 bytes. Attacker replacement was 1728 bytes with ~40-50 redirect entries.",
+        "disable_correlation": false,
+        "Tag": [
+          {"name": "tlp:white"},
+          {"name": "hosts-hijack"},
+          {"name": "system-modification"}
+        ]
+      },
+      {
+        "type": "ip-dst",
+        "category": "Network activity",
+        "to_ids": true,
+        "value": "104.21.85.232",
+        "comment": "Cloudflare-resolved IP for charlestonwaterheater.com. C2 infrastructure behind Cloudflare proxy.",
+        "disable_correlation": false,
+        "Tag": [
+          {"name": "tlp:white"},
+          {"name": "c2"},
+          {"name": "cloudflare"}
+        ]
+      },
+      {
+        "type": "ip-dst",
+        "category": "Network activity",
+        "to_ids": true,
+        "value": "172.67.211.228",
+        "comment": "Cloudflare-resolved IP for charlestonwaterheater.com. C2 infrastructure behind Cloudflare proxy.",
+        "disable_correlation": false,
+        "Tag": [
+          {"name": "tlp:white"},
+          {"name": "c2"},
+          {"name": "cloudflare"}
+        ]
+      },
+      {
+        "type": "text",
+        "category": "Network activity",
+        "to_ids": false,
+        "value": "SpiderBanner.dll",
+        "comment": "Custom NSIS plugin found in WeChat_Setup.exe installer. Part of NSIS UI banner system in the dropper.",
+        "disable_correlation": true,
+        "Tag": [
+          {"name": "tlp:white"},
+          {"name": "nsis"},
+          {"name": "installer"}
+        ]
+      },
+      {
+        "type": "text",
+        "category": "Network activity",
+        "to_ids": false,
+        "value": "5.9.12.57810",
+        "comment": "Fake WeChat version string found in Electron app package.json. Part of social engineering decoy.",
+        "disable_correlation": true,
+        "Tag": [
+          {"name": "tlp:white"},
+          {"name": "version-string"},
+          {"name": "decoy"}
+        ]
+      },
+      {
+        "type": "text",
+        "category": "Attribution",
+        "to_ids": false,
+        "value": "2719ae1155671780ce8ca878a6e31292",
+        "comment": "Sentry SDK salt found in main.js of Electron app. Decodes to wechat.web12api.com (Base64: aHR0cHM6Ly93ZWNoYXQud2ViMTJhcGkuY29tL2FwaS9sYXVuY2hlcg==).",
+        "disable_correlation": true,
+        "Tag": [
+          {"name": "tlp:white"},
+          {"name": "sentry-sdk"},
+          {"name": "salt"}
+        ]
+      }
+    ],
+    "Galaxy": [],
+    "Object": []
+  }
+}

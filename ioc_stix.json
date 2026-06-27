@@ -1,0 +1,257 @@
+{
+  "spec_version": "2.1",
+  "type": "bundle",
+  "id": "bundle--sentry-north-wechat-stealer-2026",
+  "objects": [
+    {
+      "type": "identity",
+      "spec_version": "2.1",
+      "id": "identity--sentry-north",
+      "name": "Sentry North Security Research",
+      "identity_class": "organization",
+      "contact_information": "research@sentrynorth.ai"
+    },
+    {
+      "type": "threat-actor",
+      "spec_version": "2.1",
+      "id": "threat-actor--wechat-impersonation-campaign",
+      "name": "WeChat Impersonation Campaign",
+      "description": "Cross-platform phishing campaign impersonating WeChat using punycode domains, OS-aware payload delivery, and Hijack.Host malware.",
+      "threat_actor_types": ["criminal"],
+      "goals": ["credential theft", "cryptocurrency theft", "data exfiltration"],
+      "sophistication": "medium",
+      "resource_level": "individual",
+      "primary_motivation": "personal-gain"
+    },
+    {
+      "type": "malware",
+      "spec_version": "2.1",
+      "id": "malware--hijack-host",
+      "name": "Hijack.Host",
+      "description": "Windows HOSTS file hijacker that replaces system DNS entries to block security vendors and redirect traffic to attacker-controlled servers.",
+      "malware_types": ["trojan", "backdoor"],
+      "is_family": true,
+      "first_seen": "2026-06-25T00:00:00Z",
+      "architecture_execution_envs": ["x86"],
+      "operating_system_refs": ["windows"]
+    },
+    {
+      "type": "malware",
+      "spec_version": "2.1",
+      "id": "malware--wechat-setup-dropper",
+      "name": "WeChat_Setup.exe",
+      "description": "101MB NSIS+Electron dropper that delivers Hijack.Host while displaying a fake WeChat login UI and fake Firefox update decoy.",
+      "malware_types": ["dropper", "trojan"],
+      "is_family": false,
+      "first_seen": "2026-06-25T00:00:00Z",
+      "architecture_execution_envs": ["x86"],
+      "operating_system_refs": ["windows"]
+    },
+    {
+      "type": "malware",
+      "spec_version": "2.1",
+      "id": "malware--macos-zsh-stealer",
+      "name": "macOS Zsh Stealer",
+      "description": "C2-served AppleScript payload delivered via curl|zsh that collects system data and exfiltrates via chunked HTTP PUT.",
+      "malware_types": ["trojan", "infostealer"],
+      "is_family": false,
+      "first_seen": "2026-06-25T00:00:00Z",
+      "architecture_execution_envs": ["x86-64"],
+      "operating_system_refs": ["macos"]
+    },
+    {
+      "type": "indicator",
+      "spec_version": "2.1",
+      "id": "indicator--punycode-domain",
+      "name": "WeChat Punycode Phishing Domain",
+      "pattern": "[domain-name:value = 'xn--wechat-u88im840c.com']",
+      "pattern_type": "stix",
+      "valid_from": "2026-06-25T00:00:00Z",
+      "labels": ["malicious-activity"],
+      "confidence": 95,
+      "description": "Punycode domain impersonating WeChat (wechat\u4f1a\u9762.com) used in targeted phishing campaign."
+    },
+    {
+      "type": "indicator",
+      "spec_version": "2.1",
+      "id": "indicator--payload-host",
+      "name": "Payload Delivery Host",
+      "pattern": "[domain-name:value = 'wechat.appstore.ms']",
+      "pattern_type": "stix",
+      "valid_from": "2026-06-25T00:00:00Z",
+      "labels": ["malicious-activity"],
+      "confidence": 90,
+      "description": "Host serving platform-specific payloads for WeChat impersonation campaign."
+    },
+    {
+      "type": "indicator",
+      "spec_version": "2.1",
+      "id": "indicator--c2-domain",
+      "name": "C2 Infrastructure Domain",
+      "pattern": "[domain-name:value = 'charlestonwaterheater.com']",
+      "pattern_type": "stix",
+      "valid_from": "2026-06-25T00:00:00Z",
+      "labels": ["malicious-activity", "command-and-control"],
+      "confidence": 95,
+      "description": "Cloudflare-fronted C2 server for WeChat impersonation campaign. Registrar: Unstoppable Domains."
+    },
+    {
+      "type": "indicator",
+      "spec_version": "2.1",
+      "id": "indicator--hosts-file-hash",
+      "name": "Hijack.Host HOSTS File Hash",
+      "pattern": "[file:hashes.'SHA-256' = '1717BB599E119E54F944755656334AECA9CDCCB23A03113860A4627EF29904D3']",
+      "pattern_type": "stix",
+      "valid_from": "2026-06-25T00:00:00Z",
+      "labels": ["malicious-activity"],
+      "confidence": 100,
+      "description": "SHA256 of attacker-controlled HOSTS file dropped by Hijack.Host (1728 bytes)."
+    },
+    {
+      "type": "indicator",
+      "spec_version": "2.1",
+      "id": "indicator--victim-token",
+      "name": "C2 Victim Session Token",
+      "pattern": "[artifact:payload_bin = 'e505bde9e3545ce2361f7cc1f948dcb1124de03384544fea46e99a982a106e6f']",
+      "pattern_type": "stix",
+      "valid_from": "2026-06-25T00:00:00Z",
+      "labels": ["malicious-activity"],
+      "confidence": 85,
+      "description": "Victim/session token observed in C2 communications. Likely unique per infection."
+    },
+    {
+      "type": "indicator",
+      "spec_version": "2.1",
+      "id": "indicator--api-key",
+      "name": "C2 API Authentication Key",
+      "pattern": "[artifact:payload_bin = '5190ef1733183a0dc63fb623357f56d6']",
+      "pattern_type": "stix",
+      "valid_from": "2026-06-25T00:00:00Z",
+      "labels": ["malicious-activity"],
+      "confidence": 85,
+      "description": "API key used for C2 authentication. Likely unique per campaign."
+    },
+    {
+      "type": "indicator",
+      "spec_version": "2.1",
+      "id": "indicator--phishing-url",
+      "name": "Phishing URL",
+      "pattern": "[url:value = 'https://xn--wechat-u88im840c.com/calls/663553598529']",
+      "pattern_type": "stix",
+      "valid_from": "2026-06-25T00:00:00Z",
+      "labels": ["malicious-activity", "phishing"],
+      "confidence": 95,
+      "description": "Initial phishing lure URL delivered via Telegram DM."
+    },
+    {
+      "type": "indicator",
+      "spec_version": "2.1",
+      "id": "indicator--cloudflare-ip-1",
+      "name": "C2 Cloudflare IP 1",
+      "pattern": "[ipv4-addr:value = '104.21.85.232']",
+      "pattern_type": "stix",
+      "valid_from": "2026-06-25T00:00:00Z",
+      "labels": ["malicious-activity", "command-and-control"],
+      "confidence": 90,
+      "description": "Cloudflare-resolved IP for charlestonwaterheater.com."
+    },
+    {
+      "type": "indicator",
+      "spec_version": "2.1",
+      "id": "indicator--cloudflare-ip-2",
+      "name": "C2 Cloudflare IP 2",
+      "pattern": "[ipv4-addr:value = '172.67.211.228']",
+      "pattern_type": "stix",
+      "valid_from": "2026-06-25T00:00:00Z",
+      "labels": ["malicious-activity", "command-and-control"],
+      "confidence": 90,
+      "description": "Cloudflare-resolved IP for charlestonwaterheater.com."
+    },
+    {
+      "type": "attack-pattern",
+      "spec_version": "2.1",
+      "id": "attack-pattern--punycode-masquerading",
+      "name": "Punycode Domain Masquerading",
+      "description": "Using IDN homograph attacks to create visually deceptive domains that impersonate legitimate brands.",
+      "kill_chain_phases": [
+        {
+          "kill_chain_name": "mitre-attack",
+          "phase_name": "initial-access"
+        }
+      ]
+    },
+    {
+      "type": "attack-pattern",
+      "spec_version": "2.1",
+      "id": "attack-pattern--hosts-hijack",
+      "name": "HOSTS File Hijacking",
+      "description": "Replacing or modifying the system HOSTS file to redirect DNS queries for security vendors and sensitive domains to attacker-controlled endpoints or localhost.",
+      "kill_chain_phases": [
+        {
+          "kill_chain_name": "mitre-attack",
+          "phase_name": "defense-evasion"
+        },
+        {
+          "kill_chain_name": "mitre-attack",
+          "phase_name": "credential-access"
+        }
+      ]
+    },
+    {
+      "type": "relationship",
+      "spec_version": "2.1",
+      "id": "relationship--threat-actor-uses-malware",
+      "relationship_type": "uses",
+      "source_ref": "threat-actor--wechat-impersonation-campaign",
+      "target_ref": "malware--wechat-setup-dropper"
+    },
+    {
+      "type": "relationship",
+      "spec_version": "2.1",
+      "id": "relationship--dropper-delivers-hijack",
+      "relationship_type": "delivers",
+      "source_ref": "malware--wechat-setup-dropper",
+      "target_ref": "malware--hijack-host"
+    },
+    {
+      "type": "relationship",
+      "spec_version": "2.1",
+      "id": "relationship--threat-actor-uses-macos",
+      "relationship_type": "uses",
+      "source_ref": "threat-actor--wechat-impersonation-campaign",
+      "target_ref": "malware--macos-zsh-stealer"
+    },
+    {
+      "type": "relationship",
+      "spec_version": "2.1",
+      "id": "relationship--indicator-indicates-malware",
+      "relationship_type": "indicates",
+      "source_ref": "indicator--punycode-domain",
+      "target_ref": "malware--wechat-setup-dropper"
+    },
+    {
+      "type": "relationship",
+      "spec_version": "2.1",
+      "id": "relationship--indicator-indicates-c2",
+      "relationship_type": "indicates",
+      "source_ref": "indicator--c2-domain",
+      "target_ref": "threat-actor--wechat-impersonation-campaign"
+    },
+    {
+      "type": "relationship",
+      "spec_version": "2.1",
+      "id": "relationship--malware-uses-pattern",
+      "relationship_type": "uses",
+      "source_ref": "malware--wechat-setup-dropper",
+      "target_ref": "attack-pattern--punycode-masquerading"
+    },
+    {
+      "type": "relationship",
+      "spec_version": "2.1",
+      "id": "relationship--hijack-uses-pattern",
+      "relationship_type": "uses",
+      "source_ref": "malware--hijack-host",
+      "target_ref": "attack-pattern--hosts-hijack"
+    }
+  ]
+}

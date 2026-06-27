@@ -1,0 +1,25 @@
+title: Hijack.Host - HOSTS File Replacement
+id: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+status: experimental
+description: Detects HOSTS file replacement characteristic of Hijack.Host malware
+author: Sentry North Security Research
+date: 2026/06/26
+references:
+    - https://sentrynorth.ai
+logsource:
+    category: file_event
+    product: windows
+detection:
+    selection:
+        TargetFilename|endswith: '\drivers\etc\hosts'
+        EventID: 11  # FileCreate
+    filter:
+        TargetFilename|contains: '\drivers\etc\hosts'
+    condition: selection and filter
+falsepositives:
+    - Legitimate HOSTS file modifications by administrators
+    - Some security tools add entries to HOSTS file
+level: high
+tags:
+    - attack.impact
+    - attack.t1546.010
