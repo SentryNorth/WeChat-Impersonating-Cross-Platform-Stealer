@@ -35,7 +35,7 @@ Raw IOCs are provided in multiple formats:
 | Payload Host | `wechat.appstore.ms` | Multi-platform payload delivery |
 | Phishing URL | `https://xn--wechat-u88im840c.com/calls/663553598529` | Original lure |
 | Windows Installer | `WeChat_Setup.exe` (101MB) | NSIS+Electron dropper |
-| HOSTS Hash | `1717BB599E119E54F944755656334AECA9CDCCB23A03113860A4627EF29904D3` | SHA256 of replaced HOSTS file |
+| **Dropper Hash** | `150f9d3297adac81aaa042fc585732e1229d15d7021532100b8563571642fae3` | SHA256 of WeChat_Setup.exe ([VirusTotal](https://www.virustotal.com/gui/file/150f9d3297adac81aaa042fc585732e1229d15d7021532100b8563571642fae3)) |
 
 ### Verified Anti-Analysis Entry
 
