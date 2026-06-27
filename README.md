@@ -59,14 +59,7 @@ Detection rules are provided in `detection/`:
 
 ## Technical Analysis
 
-See `ANALYSIS.md` for the full technical report including:
-
-- Complete attack chain reconstruction
-- Binary analysis of the 101MB NSIS+Electron dropper (1,940 ASAR files extracted)
-- Cross-platform payload breakdown (macOS zsh loader + Windows NSIS installer)
-- C2 infrastructure analysis (WHOIS, registrar data, Cloudflare IPs)
-- MITRE ATT&CK mapping (16 techniques mapped)
-- Malwarebytes baseline comparison (0 real-time detection, 1 artifact found post-deployment)
+The full technical report is published separately. This repository contains IOCs and detection rules for immediate community use.
 
 ---
 
@@ -86,4 +79,4 @@ Over multiple structured adversarial sessions against a professional red team, S
 
 ---
 
-*This repository was created to provide the security community with actionable IOCs and detection rules. The full technical report is available in `ANALYSIS.md`.*
+*This repository was created to provide the security community with actionable IOCs and detection rules.*
