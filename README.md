@@ -116,7 +116,7 @@ This report was produced by the Sentry North autonomous analysis pipeline, which
 
 Over multiple structured adversarial sessions against a professional red team, Sentry North improved from catching 10% of attacks to catching 100%, with detection times under one second and zero false positives.
 
-**Contact:**  sentry.north@proton.me
+**contact@sentrynorth.ai**  
 **License:** Creative Commons Attribution 4.0 (CC BY 4.0). Attribution required.
 
 ---
